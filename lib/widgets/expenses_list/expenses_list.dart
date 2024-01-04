@@ -1,0 +1,39 @@
+import 'package:budget_tracker/models/expense.dart';
+import 'package:budget_tracker/widgets/expense_details.dart';
+import 'package:budget_tracker/widgets/expenses_list/expense_item.dart';
+import 'package:flutter/material.dart';
+
+class ExpensesList extends StatelessWidget {
+  const ExpensesList({
+    super.key,
+    required this.expenses,
+    required this.onRemoveExpense,
+  });
+
+  final List<Expense> expenses;
+  final void Function(Expense expense) onRemoveExpense;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: expenses.length,
+      itemBuilder: (ctx, index) => Dismissible(
+        key: ValueKey(expenses[index]),
+        onDismissed: (direction) {
+          onRemoveExpense(expenses[index]);
+        },
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ExpenseDetails(expenses[index])),
+            );
+          },
+          child: ExpenseItem(
+            expenses[index],
+          ),
+        ),
+      ),
+    );
+  }
+}
